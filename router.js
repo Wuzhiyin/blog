@@ -1,5 +1,6 @@
 var express = require('express')
 var User = require('./models/user')
+var md5 = require('blueimp-md5')
 
 var router = express.Router()
 
@@ -44,6 +45,10 @@ router.post('/register', function (req, res) {
             })
             return res.send(`邮箱或者密码已存在，请重试`)
         }
+
+
+        // 对密码进行 md5 重复加密
+        body.password = md5(md5(body.password))
 
         new User(body).save(function (err, user) {
             if (err) {

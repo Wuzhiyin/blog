@@ -65,7 +65,7 @@ router.post('/register', function (req, res) {
                 message: 'OK'
             })
 
-            // 服务端重定向只针对同步请求才有效，异步请求无效
+            // 注意:服务端重定向只针对同步请求才有效，异步请求无效
             // res.redirect('/')
         })
     })

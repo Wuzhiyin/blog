@@ -15,7 +15,7 @@ router.get('/login', function (req, res) {
     res.render('login.html')
 })
 
-router.post('/login', function (req, res) {
+router.post('/login', function (req, res, next) {
     // 1. 获取表单数据
     // 2. 查询数据库用户名密码是否正确
     // 3. 发送响应数据
@@ -26,10 +26,11 @@ router.post('/login', function (req, res) {
         password: md5(md5(body.password))
     }, function (err, user) {
         if (err) {
-            return res.status(500).json({
-                err_code: 500,
-                message: err.message
-            })
+            // return res.status(500).json({
+            //   err_code: 500,
+            //   message: err.message
+            // })
+            return next(err)
         }
 
         // 如果邮箱和密码匹配，则 user 是查询到的用户对象，否则就是 null
@@ -50,11 +51,11 @@ router.post('/login', function (req, res) {
     })
 })
 
-router.get('/register', function (req, res) {
+router.get('/register', function (req, res, next) {
     res.render('register.html')
 })
 
-router.post('/register', function (req, res) {
+router.post('/register', function (req, res, next) {
     // 1. 获取表单提交的数据
     //    req.body
     // 2. 操作数据库
@@ -73,10 +74,11 @@ router.post('/register', function (req, res) {
         ]
     }, function (err, data) {
         if (err) {
-            return res.status(500).json({
-                success: false,
-                message: '服务端错误'
-            })
+            // return res.status(500).json({
+            //   success: false,
+            //   message: '服务端错误'
+            // })
+            return next(err)
         }
         // console.log(data)
         if (data) {
@@ -94,10 +96,7 @@ router.post('/register', function (req, res) {
 
         new User(body).save(function (err, user) {
             if (err) {
-                return res.status(500).json({
-                    err_code: 500,
-                    message: 'Internal error.'
-                })
+                return next(err)
             }
 
             // 注册成功，使用 Session 记录用户的登陆状态
